@@ -1,0 +1,243 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>MATLAB Programming: Image Encryption Project</title><meta name="generator" content="MATLAB 9.3"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2018-07-19"><meta name="DC.source" content="image_encryption.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>MATLAB Programming: Image Encryption Project</h1><!--introduction--><p>by <b>Andre Munoz</b></p><p>
+<a href="../portfolio.html">Back</a><br><br>
+This project encrypts an image and provides a unique encryption key to send on to a recipient.<br>
+If the recipient has a copy of the algorithm, unique key and encrypted
+image, then the image can be decrypted to see its contents.
+</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">Preparation</a></li><li><a href="#2">Generating Encryption Key</a></li><li><a href="#3">Encrypting Image</a></li><li><a href="#4">Decrypting Image</a></li><li><a href="#5">Summary</a></li></ul></div><h2 id="1">Preparation</h2><p>Reads in the image to be encrypted.</p><pre class="codeinput">clear <span class="comment">% Clears previous varables in the work space.</span>
+
+<span class="comment">% Reads in image for preparation and generating encrytion key.</span>
+I = imread(<span class="string">'picture.jpg'</span>);
+    <span class="comment">% Converts RGB to grayscale.</span>
+    <span class="keyword">if</span> size(I,3)==3
+        II = rgb2gray(I);
+    <span class="keyword">else</span>
+        II = I;
+    <span class="keyword">end</span>
+H = size(II);
+[l,w] = size(II);
+<span class="comment">% Passing the II to tasks later was problematic, so it was saved</span>
+<span class="comment">% and imported later. The joys of MATLAB :)</span>
+imwrite(II,<span class="string">'Image.tif'</span>);
+imshow(II)
+title(<span class="string">'Image'</span>)
+</pre><img vspace="5" hspace="5" src="image_encryption_01.png" alt=""> <h2 id="2">Generating Encryption Key</h2><p>Creates a key as a random binary array the same size as the image.</p><pre class="codeinput">AI = zeros([l,w]);
+E = l*w;
+<span class="comment">% Makes the array have 0.5 1s and 0s.</span>
+Ni = round(0.5*E);
+AI(randperm(numel(AI),Ni)) = 1;
+<span class="comment">% Passing the A to tasks later was problematic, so it was saved</span>
+<span class="comment">% and imported later. The joys of MATLAB :)</span>
+csvwrite(<span class="string">'Key.txt'</span>,AI)
+imshow(AI)
+title(<span class="string">'Encryption Key'</span>)
+</pre><img vspace="5" hspace="5" src="image_encryption_02.png" alt=""> <h2 id="3">Encrypting Image</h2><p>First the encrytion key is prepared for encoding.</p><pre class="codeinput">A1 = importdata(<span class="string">'Key.txt'</span>); <span class="comment">%Converts grayscale antimask to binary.</span>
+A = double(A1); <span class="comment">% Converts from logical to double.</span>
+Asize = size(A);
+[Ah,Aw] = size(A1);
+Ae = (Asize*2)-1; <span class="comment">% 2x2 mosaic template minus one row and column.</span>
+f = floor((Ae-Asize)/2); <span class="comment">% Working out amount to pad array in mosaic template.</span>
+A_MOS = padarray(A,f,<span class="string">'circular'</span>); <span class="comment">% Padds array and creates a mosaicked mask.</span>
+open = sum(A(:) == 1); <span class="comment">% Counts number of 1s in the array.</span>
+OF = (open/(Ah*Aw)); <span class="comment">% Finds open fraction.</span>
+I = 1; <span class="comment">% Sets open element at 1.</span>
+O = OF/(OF-1); <span class="comment">% Sets calculated value for closed elements</span>
+G = 2*A_MOS-1; <span class="comment">% sets binary 0 to -1 %Sets.</span>
+G( G==1 )= I; <span class="comment">% Changes open elements.</span>
+G( G==-1 )= O; <span class="comment">% Changes closed elements.</span>
+
+<span class="comment">% The images is imported.</span>
+O = imread(<span class="string">'Image.tif'</span>);
+O1 = imresize(O,[Ah Aw]); <span class="comment">% Resize image.</span>
+[Oh,Ow] = size(O1);
+
+
+
+D = normxcorr2(O1,A_MOS); <span class="comment">% Correlates the image with key to encrypt.</span>
+[Dh,Dw] = size(D); <span class="comment">% Dimension of correlated array.</span>
+dh = floor(Dh-Oh)/2;
+dw = floor(Dw-Ow)/2;
+COR = imcrop(D,[dw dh Ow-1 Oh-1]); <span class="comment">% Crop image</span>
+COR1 = mat2gray(COR); <span class="comment">% Converts %binary to grayscale to view.</span>
+imshow(COR1)
+title(<span class="string">'Encrypted Image'</span>)
+</pre><img vspace="5" hspace="5" src="image_encryption_03.png" alt=""> <h2 id="4">Decrypting Image</h2><p>Encrypts the image using cross-correlation.</p><pre class="codeinput">R = normxcorr2(COR,G); <span class="comment">% Correlates the ecrypted image with key to decrypt.</span>
+[Rh,Rw] = size(R);
+Rh = floor(Rh-Oh)/2;
+Rw = floor(Rw-Ow)/2;
+rCOR = imcrop(R,[Rw Rh Ow-1 Oh-1]); <span class="comment">% Crop image</span>
+rCOR1 = mat2gray(rCOR); <span class="comment">% Converts binary to grayscale to view.</span>
+delete <span class="string">Key.txt</span>
+delete <span class="string">Image.tif</span>
+imshow(rCOR1)
+title(<span class="string">'Decrypted Image'</span>)
+</pre><img vspace="5" hspace="5" src="image_encryption_04.png" alt=""> <h2 id="5">Summary</h2><p>The encrypted image has been  successfully decrypted. However, the decrypted image appear slightly noisey due to autocorrelation properties of the randomly generated encrytion key. This can be addressed by using other decoding methods, such as blind deconvolution or using keys with better properties. Nonetheless, the project was just a quick demonstration of some of my coding skills.</p><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2017b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% MATLAB Programming: Image Encryption Project
+% by *Andre Munoz*
+%
+% <html>
+% <a href="../programming.html">Back</a><br><br>
+% This project encrypts an image and provides a unique encryption key to send on to a recipient.<br> 
+% If the recipient has a copy of the algorithm, unique key and encrypted
+% image, then the image can be decrypted to see its contents.
+% </html>
+%% Preparation
+% Reads in the image to be encrypted.                 
+clear % Clears previous varables in the work space.
+
+% Reads in image for preparation and generating encrytion key.
+I = imread('picture.jpg');
+    % Converts RGB to grayscale.
+    if size(I,3)==3
+        II = rgb2gray(I);
+    else
+        II = I;
+    end
+H = size(II);
+[l,w] = size(II);
+% Passing the II to tasks later was problematic, so it was saved 
+% and imported later. The joys of MATLAB :)
+imwrite(II,'Image.tif');
+imshow(II)
+title('Image')
+
+    
+    
+%% Generating Encryption Key
+% Creates a key as a random binary array the same size as the image.
+AI = zeros([l,w]);
+E = l*w;
+% Makes the array have 0.5 1s and 0s.
+Ni = round(0.5*E);
+AI(randperm(numel(AI),Ni)) = 1;
+% Passing the A to tasks later was problematic, so it was saved 
+% and imported later. The joys of MATLAB :)
+csvwrite('Key.txt',AI)
+imshow(AI)
+title('Encryption Key')
+
+
+%% Encrypting Image
+% First the encrytion key is prepared for encoding. 
+A1 = importdata('Key.txt'); %Converts grayscale antimask to binary.
+A = double(A1); % Converts from logical to double.
+Asize = size(A); 
+[Ah,Aw] = size(A1);
+Ae = (Asize*2)-1; % 2x2 mosaic template minus one row and column.
+f = floor((Ae-Asize)/2); % Working out amount to pad array in mosaic template.
+A_MOS = padarray(A,f,'circular'); % Padds array and creates a mosaicked mask.
+open = sum(A(:) == 1); % Counts number of 1s in the array.
+OF = (open/(Ah*Aw)); % Finds open fraction.
+I = 1; % Sets open element at 1.
+O = OF/(OF-1); % Sets calculated value for closed elements
+G = 2*A_MOS-1; % sets binary 0 to -1 %Sets.
+G( G==1 )= I; % Changes open elements.
+G( G==-1 )= O; % Changes closed elements.
+
+% The images is imported. 
+O = imread('Image.tif');
+O1 = imresize(O,[Ah Aw]); % Resize image.
+[Oh,Ow] = size(O1); 
+
+
+
+D = normxcorr2(O1,A_MOS); % Correlates the image with key to encrypt.
+[Dh,Dw] = size(D); % Dimension of correlated array.
+dh = floor(Dh-Oh)/2; 
+dw = floor(Dw-Ow)/2; 
+COR = imcrop(D,[dw dh Ow-1 Oh-1]); % Crop image     
+COR1 = mat2gray(COR); % Converts %binary to grayscale to view.
+imshow(COR1)
+title('Encrypted Image')
+
+
+%% Decrypting Image
+% Encrypts the image using cross-correlation.
+R = normxcorr2(COR,G); % Correlates the ecrypted image with key to decrypt.
+[Rh,Rw] = size(R); 
+Rh = floor(Rh-Oh)/2; 
+Rw = floor(Rw-Ow)/2; 
+rCOR = imcrop(R,[Rw Rh Ow-1 Oh-1]); % Crop image     
+rCOR1 = mat2gray(rCOR); % Converts binary to grayscale to view.
+delete Key.txt
+delete Image.tif
+imshow(rCOR1)
+title('Decrypted Image')
+%% Summary
+% The encrypted image has been  successfully decrypted. However, the decrypted
+% image appears slightly noisey due to the autocorrelation properties of 
+% the randomly generated encrytion key. This can be addressed by using other 
+% decoding methods, such as blind deconvolution or using keys with better
+% properties. Nonetheless, the project was just a quick demonstration of
+% some of my programming skills.
+
+##### SOURCE END #####
+--></body></html>
